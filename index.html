@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <link rel="stylesheet" href="css/leaflet-control-geocoder.Geocoder.css">
+        <style>
+        html, body, #map {
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+        }
+        </style>
+        <title></title>
+    </head>
+    <body>
+        <div id="map">
+        </div>
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="js/leaflet-control-geocoder.Geocoder.js"></script>
+        <script src="data/ChicagolandBoundary_1.js"></script>
+        <script src="data/NonHispanicPopulation_2.js"></script>
+        <script src="data/HispanicPopulation_3.js"></script>
+        <script>
+        var highlightLayer;
+        function highlightFeature(e) {
+            highlightLayer = e.target;
+            highlightLayer.openPopup();
+        }
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        })
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+            if (bounds_group.getLayers().length) {
+                map.fitBounds(bounds_group.getBounds());
+            }
+            map.setMaxBounds(map.getBounds());
+        }
+        map.createPane('pane_GoogleMaps_0');
+        map.getPane('pane_GoogleMaps_0').style.zIndex = 400;
+        var layer_GoogleMaps_0 = L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            pane: 'pane_GoogleMaps_0',
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+        });
+        layer_GoogleMaps_0;
+        map.addLayer(layer_GoogleMaps_0);
+        function pop_ChicagolandBoundary_1(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2"><strong>State</strong><br />' + (feature.properties['State'] !== null ? autolinker.link(feature.properties['State'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2"><strong>County</strong><br />' + (feature.properties['County'] !== null ? autolinker.link(feature.properties['County'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_ChicagolandBoundary_1_0() {
+            return {
+                pane: 'pane_ChicagolandBoundary_1',
+                opacity: 1,
+                color: 'rgba(72,72,72,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 2.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(255,127,0,0.0)',
+                interactive: true,
+            }
+        }
+        map.createPane('pane_ChicagolandBoundary_1');
+        map.getPane('pane_ChicagolandBoundary_1').style.zIndex = 401;
+        map.getPane('pane_ChicagolandBoundary_1').style['mix-blend-mode'] = 'normal';
+        var layer_ChicagolandBoundary_1 = new L.geoJson(json_ChicagolandBoundary_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_ChicagolandBoundary_1',
+            layerName: 'layer_ChicagolandBoundary_1',
+            pane: 'pane_ChicagolandBoundary_1',
+            onEachFeature: pop_ChicagolandBoundary_1,
+            style: style_ChicagolandBoundary_1_0,
+        });
+        bounds_group.addLayer(layer_ChicagolandBoundary_1);
+        map.addLayer(layer_ChicagolandBoundary_1);
+        function pop_NonHispanicPopulation_2(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">State</th>\
+                        <td>' + (feature.properties['State'] !== null ? autolinker.link(feature.properties['State'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">County</th>\
+                        <td>' + (feature.properties['County'] !== null ? autolinker.link(feature.properties['County'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Percentage</th>\
+                        <td>' + (feature.properties['Percentage'] !== null ? autolinker.link(feature.properties['Percentage'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Pop</th>\
+                        <td>' + (feature.properties['Total Pop'] !== null ? autolinker.link(feature.properties['Total Pop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">NonHispPop</th>\
+                        <td>' + (feature.properties['NonHispPop'] !== null ? autolinker.link(feature.properties['NonHispPop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_NonHispanicPopulation_2_0(feature) {
+            if (feature.properties['Percentage'] >= 90.000000 && feature.properties['Percentage'] <= 92.885351 ) {
+                return {
+                pane: 'pane_NonHispanicPopulation_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(8,104,172,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 85.000000 && feature.properties['Percentage'] <= 90.000000 ) {
+                return {
+                pane: 'pane_NonHispanicPopulation_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(55,150,196,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 80.000000 && feature.properties['Percentage'] <= 85.000000 ) {
+                return {
+                pane: 'pane_NonHispanicPopulation_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(101,187,198,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 75.000000 && feature.properties['Percentage'] <= 80.000000 ) {
+                return {
+                pane: 'pane_NonHispanicPopulation_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(148,214,193,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 70.000000 && feature.properties['Percentage'] <= 75.000000 ) {
+                return {
+                pane: 'pane_NonHispanicPopulation_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(197,232,197,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 67.165968 && feature.properties['Percentage'] <= 70.000000 ) {
+                return {
+                pane: 'pane_NonHispanicPopulation_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,249,232,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_NonHispanicPopulation_2');
+        map.getPane('pane_NonHispanicPopulation_2').style.zIndex = 402;
+        map.getPane('pane_NonHispanicPopulation_2').style['mix-blend-mode'] = 'normal';
+        var layer_NonHispanicPopulation_2 = new L.geoJson(json_NonHispanicPopulation_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_NonHispanicPopulation_2',
+            layerName: 'layer_NonHispanicPopulation_2',
+            pane: 'pane_NonHispanicPopulation_2',
+            onEachFeature: pop_NonHispanicPopulation_2,
+            style: style_NonHispanicPopulation_2_0,
+        });
+        bounds_group.addLayer(layer_NonHispanicPopulation_2);
+        map.addLayer(layer_NonHispanicPopulation_2);
+        function pop_HispanicPopulation_3(feature, layer) {
+            layer.on({
+                mouseout: function(e) {
+                    if (typeof layer.closePopup == 'function') {
+                        layer.closePopup();
+                    } else {
+                        layer.eachLayer(function(feature){
+                            feature.closePopup()
+                        });
+                    }
+                },
+                mouseover: highlightFeature,
+            });
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">State</th>\
+                        <td>' + (feature.properties['State'] !== null ? autolinker.link(feature.properties['State'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">County</th>\
+                        <td>' + (feature.properties['County'] !== null ? autolinker.link(feature.properties['County'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Percentage</th>\
+                        <td>' + (feature.properties['Percentage'] !== null ? autolinker.link(feature.properties['Percentage'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Total Pop</th>\
+                        <td>' + (feature.properties['Total Pop'] !== null ? autolinker.link(feature.properties['Total Pop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Hisp Pop</th>\
+                        <td>' + (feature.properties['Hisp Pop'] !== null ? autolinker.link(feature.properties['Hisp Pop'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_HispanicPopulation_3_0(feature) {
+            if (feature.properties['Percentage'] >= 30.000000 && feature.properties['Percentage'] <= 32.834032 ) {
+                return {
+                pane: 'pane_HispanicPopulation_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(8,104,172,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 25.000000 && feature.properties['Percentage'] <= 30.000000 ) {
+                return {
+                pane: 'pane_HispanicPopulation_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(55,150,196,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 20.000000 && feature.properties['Percentage'] <= 25.000000 ) {
+                return {
+                pane: 'pane_HispanicPopulation_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(101,187,198,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 15.000000 && feature.properties['Percentage'] <= 20.000000 ) {
+                return {
+                pane: 'pane_HispanicPopulation_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(148,214,193,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 10.000000 && feature.properties['Percentage'] <= 15.000000 ) {
+                return {
+                pane: 'pane_HispanicPopulation_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(197,232,197,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['Percentage'] >= 7.114649 && feature.properties['Percentage'] <= 10.000000 ) {
+                return {
+                pane: 'pane_HispanicPopulation_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(240,249,232,1.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_HispanicPopulation_3');
+        map.getPane('pane_HispanicPopulation_3').style.zIndex = 403;
+        map.getPane('pane_HispanicPopulation_3').style['mix-blend-mode'] = 'normal';
+        var layer_HispanicPopulation_3 = new L.geoJson(json_HispanicPopulation_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_HispanicPopulation_3',
+            layerName: 'layer_HispanicPopulation_3',
+            pane: 'pane_HispanicPopulation_3',
+            onEachFeature: pop_HispanicPopulation_3,
+            style: style_HispanicPopulation_3_0,
+        });
+        bounds_group.addLayer(layer_HispanicPopulation_3);
+        map.addLayer(layer_HispanicPopulation_3);
+        var osmGeocoder = new L.Control.Geocoder({
+            collapsed: true,
+            position: 'topleft',
+            text: 'Search',
+            title: 'Testing'
+        }).addTo(map);
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .className += ' fa fa-search';
+        document.getElementsByClassName('leaflet-control-geocoder-icon')[0]
+        .title += 'Search for a place';
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Hispanic Population<br /><table><tr><td style="text-align: center;"><img src="legend/HispanicPopulation_3_Morethan300.png" /></td><td>More than 30%</td></tr><tr><td style="text-align: center;"><img src="legend/HispanicPopulation_3_25301.png" /></td><td>25 - 30%</td></tr><tr><td style="text-align: center;"><img src="legend/HispanicPopulation_3_20252.png" /></td><td>20 - 25%</td></tr><tr><td style="text-align: center;"><img src="legend/HispanicPopulation_3_15203.png" /></td><td>15 - 20%</td></tr><tr><td style="text-align: center;"><img src="legend/HispanicPopulation_3_10154.png" /></td><td>10 - 15%</td></tr><tr><td style="text-align: center;"><img src="legend/HispanicPopulation_3_Lessthan105.png" /></td><td>Less than 10%</td></tr></table>': layer_HispanicPopulation_3,'Non Hispanic Population<br /><table><tr><td style="text-align: center;"><img src="legend/NonHispanicPopulation_2_Morethan900.png" /></td><td>More than 90%</td></tr><tr><td style="text-align: center;"><img src="legend/NonHispanicPopulation_2_85901.png" /></td><td>85 - 90%</td></tr><tr><td style="text-align: center;"><img src="legend/NonHispanicPopulation_2_80852.png" /></td><td>80 - 85%</td></tr><tr><td style="text-align: center;"><img src="legend/NonHispanicPopulation_2_75803.png" /></td><td>75 - 80%</td></tr><tr><td style="text-align: center;"><img src="legend/NonHispanicPopulation_2_70754.png" /></td><td>70 - 75%</td></tr><tr><td style="text-align: center;"><img src="legend/NonHispanicPopulation_2_Lessthan705.png" /></td><td>Less than 70%</td></tr></table>': layer_NonHispanicPopulation_2,'<img src="legend/ChicagolandBoundary_1.png" /> Chicagoland Boundary': layer_ChicagolandBoundary_1,"Google Maps": layer_GoogleMaps_0,}).addTo(map);
+        setBounds();
+        var i = 0;
+        layer_ChicagolandBoundary_1.eachLayer(function(layer) {
+            var context = {
+                feature: layer.feature,
+                variables: {}
+            };
+            layer.bindTooltip((layer.feature.properties['County'] !== null?String('<div style="color: #323232; font-size: 10pt; font-family: \'Open Sans\', sans-serif;">' + layer.feature.properties['County']) + '</div>':''), {permanent: true, offset: [-0, -16], className: 'css_ChicagolandBoundary_1'});
+            labels.push(layer);
+            totalMarkers += 1;
+              layer.added = true;
+              addLabel(layer, i);
+              i++;
+        });
+        resetLabels([layer_ChicagolandBoundary_1,layer_NonHispanicPopulation_2,layer_HispanicPopulation_3]);
+        map.on("zoomend", function(){
+            resetLabels([layer_ChicagolandBoundary_1,layer_NonHispanicPopulation_2,layer_HispanicPopulation_3]);
+        });
+        map.on("layeradd", function(){
+            resetLabels([layer_ChicagolandBoundary_1,layer_NonHispanicPopulation_2,layer_HispanicPopulation_3]);
+        });
+        map.on("layerremove", function(){
+            resetLabels([layer_ChicagolandBoundary_1,layer_NonHispanicPopulation_2,layer_HispanicPopulation_3]);
+        });
+        </script>
+    </body>
+</html>
